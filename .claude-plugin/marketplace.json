@@ -1,0 +1,17 @@
+{
+  "name": "mailfully",
+  "description": "Agent skills from Mailfully, the transactional email API. Free for 5,000 emails a month; paid plans from $19 a month for 50,000.",
+  "owner": {
+    "name": "Mailfully",
+    "url": "https://mailfully.com"
+  },
+  "plugins": [
+    {
+      "name": "add-mailfully",
+      "source": "./",
+      "description": "Adds transactional email to your app with Mailfully, or moves it from Resend, SendGrid, Postmark or Nodemailer/SMTP. Works in Node.js, Python, Ruby, Go and PHP, with Django and Rails adapters, and proves a send in test mode before any DNS work. Free for 5,000 emails a month; paid plans from $19 a month for 50,000.",
+      "homepage": "https://mailfully.com",
+      "category": "integrations"
+    }
+  ]
+}
