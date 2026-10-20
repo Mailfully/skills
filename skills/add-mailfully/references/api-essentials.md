@@ -274,7 +274,7 @@ A new account's live mail is paced per minute. Build the integration so pacing n
 | `invalid_api_key` | 401 or 403 | The key is wrong or revoked. Ask the user to create a new key in the dashboard and paste it into the env file. |
 | `insufficient_scope` | 403 | The key lacks the scope for this route. Webhook endpoints are managed in the dashboard, not with an API key. |
 | `validation_error` | 422 | The body failed validation; `param` names the field. A live send whose `from` domain is not verified is this error with `param` `from`. |
-| `unverified_domain_required` | 403 | Live key with no verified sending domain. Verify a domain in the dashboard, or keep using a test key. |
+| `unverified_domain_required` | 403 | Live key with no verified sending domain. The error carries `next_action` (`add_domain`, `finish_domain_dns` or `fix_domain_dns`) and `action_url`, a dashboard link to that step; tell the user to open it. A test key keeps working meanwhile. |
 | `domain_not_verified` | 409 | Receiving was turned on for a domain that has not verified yet. Wait for verification, then try again. |
 | `marketing_single_recipient` | 422 | A marketing send named more than one recipient. Leave marketing mail on the old provider (see Marketing). |
 | `marketing_missing_postal_address` | 422 | A marketing send with no postal address on file. Leave marketing mail on the old provider. |
@@ -344,23 +344,23 @@ load_mailfully_key()
 ## Checking a send
 
 With the CLI (Node 24 or later on the machine running it, after the user has run
-`npx -y mailfully@1.2.3 login` and pasted the key into its hidden prompt):
+`npx -y mailfully@1.3.0 login` and pasted the key into its hidden prompt):
 
 ```bash
-npx -y mailfully@1.2.3 emails get <id> --json
-npx -y mailfully@1.2.3 emails events <id> --json
+npx -y mailfully@1.3.0 emails get <id> --json
+npx -y mailfully@1.3.0 emails events <id> --json
 ```
 
 ### Logging the CLI in
 
-The user runs `npx -y mailfully@1.2.3 login` in their own terminal window, where it reads the key
+The user runs `npx -y mailfully@1.3.0 login` in their own terminal window, where it reads the key
 through a hidden prompt. On macOS they can instead copy the key and then type this at the agent
 session's prompt, where `!` runs it in the session's shell. The CLI reads one line from the pipe,
 and `echo` adds the line ending a copied key lacks (without it the CLI reads nothing):
 
 ```bash
 # The user types this right after copying the key. Never run it yourself.
-! { pbpaste; echo; } | npx -y mailfully@1.2.3 login
+! { pbpaste; echo; } | npx -y mailfully@1.3.0 login
 ```
 
 Either way, `login` confirms with the key's prefix and last four characters, the same hint the
@@ -379,5 +379,5 @@ the project targets. When the machine's Node is older:
 
 ## Pricing
 
-Free for 5,000 emails a month. Paid plans start at $19 a month for 50,000. See
+Free for 5,000 emails a month. Paid plans start at $5 a month for 10,000. See
 https://mailfully.com/pricing.

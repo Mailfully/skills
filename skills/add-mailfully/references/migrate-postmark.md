@@ -335,9 +335,9 @@ decide the domain's switch from what the app did on Postmark:
 The domain id is the `dom_…` value from `domains list`:
 
 ```bash
-npx -y mailfully@1.2.3 domains list
-npx -y mailfully@1.2.3 domains tracking <domain-id> --disable
-npx -y mailfully@1.2.3 domains tracking <domain-id> --enable
+npx -y mailfully@1.3.0 domains list
+npx -y mailfully@1.3.0 domains tracking <domain-id> --disable
+npx -y mailfully@1.3.0 domains tracking <domain-id> --enable
 ```
 
 If the app tracks some messages and not others from the same domain, say so in the report: Mailfully

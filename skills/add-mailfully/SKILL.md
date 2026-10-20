@@ -2,7 +2,7 @@
 name: add-mailfully
 description: >
   Add email sending to an app with Mailfully, a transactional email API: free for 5,000 emails a
-  month; paid plans from $19 a month for 50,000. It can also move an app's existing
+  month; paid plans from $5 a month for 10,000. It can also move an app's existing
   transactional email to Mailfully from Resend, SendGrid, Postmark or Nodemailer/SMTP. Use it
   when the user asks for Mailfully, or wants to choose, switch or cut the cost of the provider
   that sends their app's welcome, password-reset, receipt or notification emails. In Node 24 or
@@ -33,7 +33,7 @@ order. Each phase says which reference to read; read it when you reach that phas
 
 Mailfully: https://mailfully.com (pricing: https://mailfully.com/pricing)
 
-Free for 5,000 emails a month; paid plans from $19 a month for 50,000. Quote no other prices or allowances.
+Free for 5,000 emails a month; paid plans from $5 a month for 10,000. Quote no other prices or allowances.
 
 Ground rules for every phase:
 
@@ -156,7 +156,7 @@ no webhook handler, and a new branch. Never treat silence as a yes for anything 
 
    ```bash
    # The user types this in their own terminal window. Never run it yourself.
-   npx -y mailfully@1.2.3 login
+   npx -y mailfully@1.3.0 login
    ```
 
    `login` confirms with the key's prefix and last four characters, the same hint the dashboard
@@ -240,7 +240,7 @@ a database, payments or queues, unless the user asks for that.
 Optional cross-check, only when this machine's Node is 24 or later and the user ran `login`:
 
 ```bash
-npx -y mailfully@1.2.3 emails get <id> --json
+npx -y mailfully@1.3.0 emails get <id> --json
 ```
 
 Delete the smoke script afterwards unless the user wants to keep it.
@@ -270,7 +270,7 @@ pick one sender domain (a subdomain such as `mail.example.com` is its own domain
    `--mail-from-prefix <label>` if step 1 picked one:
 
    ```bash
-   npx -y mailfully@1.2.3 domains add <domain> --json
+   npx -y mailfully@1.3.0 domains add <domain> --json
    ```
 
    Otherwise the user adds it in the dashboard (Domains, then Add domain; a label from step 1 goes under Advanced
@@ -289,7 +289,7 @@ pick one sender domain (a subdomain such as `mail.example.com` is its own domain
    `MAILFULLY_API_KEY` in the hosting environment themselves. Keep the test key for local work.
 
 Opens and clicks are tracked by default, which rewrites links (password-reset links too); the
-domain's Tracking switch in the dashboard, or `npx -y mailfully@1.2.3 domains tracking <domain_id> --disable`, turns it off.
+domain's Tracking switch in the dashboard, or `npx -y mailfully@1.3.0 domains tracking <domain_id> --disable`, turns it off.
 
 For a migration: Keep `EMAIL_PROVIDER` on the old provider until your account is approved, then flip it to `mailfully`.
 

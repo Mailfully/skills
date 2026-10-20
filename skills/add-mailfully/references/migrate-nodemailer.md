@@ -891,8 +891,8 @@ unless the old provider added it, so ask the user whether the old setup tracked 
 did not, turn tracking off for the domain (the domain id is the `dom_…` value from `domains list`):
 
 ```bash
-npx -y mailfully@1.2.3 domains list
-npx -y mailfully@1.2.3 domains tracking <domain-id> --disable
+npx -y mailfully@1.3.0 domains list
+npx -y mailfully@1.3.0 domains tracking <domain-id> --disable
 ```
 
 Say in the report which way the switch was set, and why.

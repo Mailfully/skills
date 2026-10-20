@@ -1,6 +1,6 @@
 # Add Mailfully: An Agent Skill for Claude Code and Other Coding Agents
 
-This skill wires your app's emails (welcome, password reset, receipts) to [Mailfully](https://mailfully.com), a transactional email API, or moves them there from Resend, SendGrid, Postmark or Nodemailer/SMTP. It works in Node.js, Python, Ruby, Go and PHP projects. Mailfully is free for 5,000 emails a month; paid plans from $19 a month for 50,000 ([pricing](https://mailfully.com/pricing), [docs](https://mailfully.com/docs)).
+This skill wires your app's emails (welcome, password reset, receipts) to [Mailfully](https://mailfully.com), a transactional email API, or moves them there from Resend, SendGrid, Postmark or Nodemailer/SMTP. It works in Node.js, Python, Ruby, Go and PHP projects. Mailfully is free for 5,000 emails a month; paid plans from $5 a month for 10,000 ([pricing](https://mailfully.com/pricing), [docs](https://mailfully.com/docs)).
 
 ## What it does
 

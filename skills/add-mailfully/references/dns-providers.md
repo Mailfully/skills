@@ -5,8 +5,8 @@ user's DNS provider. This file covers getting those records in place through Clo
 by hand, and then confirming that Mailfully sees them.
 
 Read [api-essentials.md](api-essentials.md) first for test and live keys. Every CLI call below runs
-`npx -y mailfully@1.2.3`, which needs Node 24 or later on the machine and a key the user has already
-given to `npx -y mailfully@1.2.3 login` through its hidden prompt. Without the CLI, the user adds the
+`npx -y mailfully@1.3.0`, which needs Node 24 or later on the machine and a key the user has already
+given to `npx -y mailfully@1.3.0 login` through its hidden prompt. Without the CLI, the user adds the
 domain in the dashboard instead (see "Without the CLI" in api-essentials.md).
 
 ## Default: print, do not write
@@ -37,7 +37,7 @@ label can be set only when the domain is added, never changed afterwards. Then a
 `--mail-from-prefix <label>` if that check picked a label, and keep the JSON output:
 
 ```bash
-npx -y mailfully@1.2.3 domains add <domain> --json
+npx -y mailfully@1.3.0 domains add <domain> --json
 ```
 
 The response carries the domain's `id` (`dom_…`, needed for every later step), its `status`
@@ -56,8 +56,8 @@ any of them and never type a value from memory: always copy `name`, `value` and 
 API's output. If the domain was added earlier, read the same list again:
 
 ```bash
-npx -y mailfully@1.2.3 domains list --json
-npx -y mailfully@1.2.3 domains get <domain_id> --json
+npx -y mailfully@1.3.0 domains list --json
+npx -y mailfully@1.3.0 domains get <domain_id> --json
 ```
 
 An MX whose `name` is the bare domain appears only once receiving is turned on for the domain. It
@@ -133,7 +133,7 @@ lists it) before picking a label.
 Normalise the TXT answers first (see Reading TXT records back). If `send.<domain>` already has a
 CNAME, an MX or a `v=spf1` TXT, it is in use: pick another label, check that one the same way, and
 add the domain with
-`npx -y mailfully@1.2.3 domains add <domain> --mail-from-prefix <label> --json` (a single DNS label,
+`npx -y mailfully@1.3.0 domains add <domain> --mail-from-prefix <label> --json` (a single DNS label,
 such as `mail` or `bounce`). In the dashboard, the label goes in the add form under Advanced
 settings (Mail From subdomain). Never modify, replace or delete an existing `send.` record to make
 room, even with the user's yes.
@@ -376,12 +376,12 @@ Tell the user, with the table:
 
 Once the records are in place, ask Mailfully to check about every 30 seconds, for up to 10 minutes in
 all. No single command may block for more than about 2 minutes, so the check runs in short rounds.
-Run `npx -y mailfully@1.2.3 --version` once first, so the first round does not also spend its time
+Run `npx -y mailfully@1.3.0 --version` once first, so the first round does not also spend its time
 downloading the CLI. One round is four checks, 30 seconds apart:
 
 ```bash
 for i in 1 2 3 4; do
-  state=$(npx -y mailfully@1.2.3 domains verify <domain_id> --json | jq -r .status)
+  state=$(npx -y mailfully@1.3.0 domains verify <domain_id> --json | jq -r .status)
   echo "check $i: ${state:-error}"
   case "$state" in
     verified|failed) break ;;
@@ -406,7 +406,7 @@ once per check, about 30 seconds apart, and read `status` from its JSON:
 After the last round, report where each record stands from:
 
 ```bash
-npx -y mailfully@1.2.3 domains get <domain_id> --json
+npx -y mailfully@1.3.0 domains get <domain_id> --json
 ```
 
 The JSON reports per part, not per record: `dkim_status` covers the three DKIM CNAMEs and
