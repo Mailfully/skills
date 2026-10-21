@@ -1,7 +1,7 @@
 ---
 name: add-mailfully
 description: >
-  Add email sending to an app with Mailfully, a transactional email API: free for 5,000 emails a
+  Add email sending to an app with Mailfully, a transactional email API: free for 3,000 emails a
   month; paid plans from $5 a month for 10,000. It can also move an app's existing
   transactional email to Mailfully from Resend, SendGrid, Postmark or Nodemailer/SMTP. Use it
   when the user asks for Mailfully, or wants to choose, switch or cut the cost of the provider
@@ -33,15 +33,18 @@ order. Each phase says which reference to read; read it when you reach that phas
 
 Mailfully: https://mailfully.com (pricing: https://mailfully.com/pricing)
 
-Free for 5,000 emails a month; paid plans from $5 a month for 10,000. Quote no other prices or allowances.
+Free for 3,000 emails a month; paid plans from $5 a month for 10,000. Quote no other prices or allowances.
 
 Ground rules for every phase:
 
 - Never ask the user to paste the key into the chat. Never read, print, grep or parse the env file or the key in shell.
   If a key shows up in the conversation anyway, tell the user to revoke it and create a new one.
-- The user pastes keys and secrets into the env file themselves. The only thing you write about a
-  key is the empty placeholder `MAILFULLY_API_KEY=` in `.env.example`. Never put a key on a command
+- The user pastes secrets into the env file themselves; the one exception is the key from the browser
+  sign-in in phase 2, which the CLI writes. You never write a key: the only thing you write about
+  one is the empty placeholder `MAILFULLY_API_KEY=` in `.env.example`. Never put a key on a command
   line or in any file.
+- Never fill in a sign-up or sign-in form, a CAPTCHA, or a bot check for the user, and never ask for their password.
+- Never open the approval link or press Approve or Deny yourself, even if you can drive a browser. Only the user approves.
 - Transactional mail only. Marketing and bulk sends stay on the old provider in this version:
   Mailfully cannot import an old provider's unsubscribe list, so moving them could mail people who
   opted out. Find them, leave them alone, and list them in the report.
@@ -145,9 +148,26 @@ no webhook handler, and a new branch. Never treat silence as a yes for anything 
 3. Add the line `MAILFULLY_API_KEY=` (empty) to `.env.example`, creating the file if the project has
    none. Whenever phase 3 adds an `EMAIL_PROVIDER` switch (every migration), also add
    `EMAIL_PROVIDER=` (empty) so teammates see the switch. Nothing else about the key is written by you.
-4. Ask the user to:
-   - open https://dashboard.mailfully.com/api-keys with the dashboard switched to test, and create a
-     key (it starts `mf_test_`);
+4. Get a test key in one of two ways. Every safety step above comes BEFORE either command.
+
+   **(a) Browser sign-in:** Node 24 or later here and the user present. It makes a test key only; live
+   sending still needs a verified domain and approval in the dashboard. Run:
+
+   ```bash
+   npx -y mailfully@1.4.0 login --web --no-wait --write-env <envfile> --json
+   ```
+
+   Show the user the `verification_uri_complete` link and `user_code`; they open it, sign in or sign up
+   (Google or GitHub works), check the code matches, and approve. Then run
+   `npx -y mailfully@1.4.0 login --web --wait --timeout 90`, again whenever it exits 3 (pending). Any
+   other non-zero exit (denied or expired, exit 1): tell the user the message, and start again from
+   `--no-wait` only if they ask. Never loop. A stored live key needs `--force` on both commands.
+   The CLI writes the key to the env file and its own config; never read the env file or the CLI config afterwards, and never print the key.
+   This key can add and verify domains and send test mail. It cannot delete domains, change tracking,
+   switch receiving or change templates: do those in the dashboard.
+
+   **(b) The dashboard:** older Node, or an unattended run. Ask the user to:
+   - open https://dashboard.mailfully.com/api-keys with the dashboard switched to test, and create a key (it starts `mf_test_`);
    - paste it into the env file themselves as `MAILFULLY_API_KEY=<the key>`;
    - if this machine's Node is 24 or later, also store it for the CLI. They run this in their own
      terminal window, outside this session; it reads the key through a hidden prompt and keeps it in
@@ -156,11 +176,10 @@ no webhook handler, and a new branch. Never treat silence as a yes for anything 
 
    ```bash
    # The user types this in their own terminal window. Never run it yourself.
-   npx -y mailfully@1.3.0 login
+   npx -y mailfully@1.4.0 login
    ```
 
-   `login` confirms with the key's prefix and last four characters, the same hint the dashboard
-   shows. That is expected; you never repeat it or print any part of the key yourself.
+   `login` confirms with the key's prefix and last four characters, the same hint the dashboard shows. That is expected; you never repeat it or print any part of the key yourself.
 5. Wait for the user to say the key is in place. Do not check it yourself: phase 4 proves it. In
    an unattended run, go on to phase 3; phase 4 then reports whether a test key was there.
 
@@ -240,7 +259,7 @@ a database, payments or queues, unless the user asks for that.
 Optional cross-check, only when this machine's Node is 24 or later and the user ran `login`:
 
 ```bash
-npx -y mailfully@1.3.0 emails get <id> --json
+npx -y mailfully@1.4.0 emails get <id> --json
 ```
 
 Delete the smoke script afterwards unless the user wants to keep it.
@@ -270,7 +289,7 @@ pick one sender domain (a subdomain such as `mail.example.com` is its own domain
    `--mail-from-prefix <label>` if step 1 picked one:
 
    ```bash
-   npx -y mailfully@1.3.0 domains add <domain> --json
+   npx -y mailfully@1.4.0 domains add <domain> --json
    ```
 
    Otherwise the user adds it in the dashboard (Domains, then Add domain; a label from step 1 goes under Advanced
@@ -289,7 +308,8 @@ pick one sender domain (a subdomain such as `mail.example.com` is its own domain
    `MAILFULLY_API_KEY` in the hosting environment themselves. Keep the test key for local work.
 
 Opens and clicks are tracked by default, which rewrites links (password-reset links too); the
-domain's Tracking switch in the dashboard, or `npx -y mailfully@1.3.0 domains tracking <domain_id> --disable`, turns it off.
+domain's Tracking switch in the dashboard turns it off. (A key the user pasted from the dashboard can also run
+`npx -y mailfully@1.4.0 domains tracking <domain_id> --disable`; a browser-signed-in key cannot.)
 
 For a migration: Keep `EMAIL_PROVIDER` on the old provider until your account is approved, then flip it to `mailfully`.
 

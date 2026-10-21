@@ -888,11 +888,13 @@ in `"attachments"`. A per-recipient loop uses `send_each` from [migrate-sendgrid
 Open and click tracking is ON by default for a new Mailfully domain: Mailfully adds an open pixel and
 rewrites links in `html`, including password-reset and sign-in links. SMTP sends tracked nothing
 unless the old provider added it, so ask the user whether the old setup tracked opens or clicks. If it
-did not, turn tracking off for the domain (the domain id is the `dom_…` value from `domains list`):
+did not, turn tracking off with the domain's Tracking switch in the dashboard. A key the user pasted
+from the dashboard (not one from the browser sign-in, which is refused here) can use the CLI instead
+(the domain id is the `dom_…` value from `domains list`):
 
 ```bash
-npx -y mailfully@1.3.0 domains list
-npx -y mailfully@1.3.0 domains tracking <domain-id> --disable
+npx -y mailfully@1.4.0 domains list
+npx -y mailfully@1.4.0 domains tracking <domain-id> --disable
 ```
 
 Say in the report which way the switch was set, and why.

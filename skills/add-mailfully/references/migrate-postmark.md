@@ -332,12 +332,14 @@ decide the domain's switch from what the app did on Postmark:
 - **It tracked only opens, or only links:** the one switch covers both, so ask the user which way to
   set it.
 
-The domain id is the `dom_…` value from `domains list`:
+Set it with the domain's Tracking switch in the dashboard. A key the user pasted from the dashboard
+(not one from the browser sign-in, which is refused here) can use the CLI instead; the domain id is
+the `dom_…` value from `domains list`:
 
 ```bash
-npx -y mailfully@1.3.0 domains list
-npx -y mailfully@1.3.0 domains tracking <domain-id> --disable
-npx -y mailfully@1.3.0 domains tracking <domain-id> --enable
+npx -y mailfully@1.4.0 domains list
+npx -y mailfully@1.4.0 domains tracking <domain-id> --disable
+npx -y mailfully@1.4.0 domains tracking <domain-id> --enable
 ```
 
 If the app tracks some messages and not others from the same domain, say so in the report: Mailfully
@@ -351,7 +353,8 @@ Mailfully templates have no logic, so a template with Mustachio blocks (`{{#each
 into `html` and `text` instead.
 
 For a flat template, copy its HTML and text out of Postmark and create it on the dashboard's Templates
-page (or with `mailfully.templates.create({ name, html, text })` in a one-off script). Then:
+page (or with `mailfully.templates.create({ name, html, text })` in a one-off script run with a key
+made in the dashboard; a key from the browser sign-in cannot change templates). Then:
 
 - `{{{var}}}` (raw output) becomes `{{var}}`. Mailfully HTML-escapes every value in the HTML body, so
   a value that must carry markup belongs in app-rendered `html` instead.

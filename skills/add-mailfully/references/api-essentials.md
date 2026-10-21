@@ -283,7 +283,7 @@ A new account's live mail is paced per minute. Build the integration so pacing n
 | `send_rate_limited` | 429 | New-account pacing. Wait `retry-after` seconds, then resend the same request. |
 | `young_sender_batch_too_large` | 422 | One request names more recipients than a new account may send in a minute. Split it into smaller requests. |
 | `account_under_review` | 429 | New accounts are reviewed before full-volume sending. Wait for the review to finish; tell the user. |
-| `daily_quota_exceeded` | 429 | A daily limit is used up. Wait for `retry-after`. On a live Free plan (200 a day), upgrading raises it; test mode has its own daily cap, which upgrading does not change. |
+| `daily_quota_exceeded` | 429 | A daily limit is used up. Wait for `retry-after`. On a live Free plan (100 a day), upgrading raises it; test mode has its own daily cap, which upgrading does not change. |
 | `monthly_quota_exceeded` | 429 | The plan's monthly allowance is used up. Upgrade the plan to keep sending this month. |
 | `spend_cap_exceeded` | 429 | The account's monthly spend cap is reached. Tell the user; sending resumes next month, or sooner if the cap is raised (contact@mailfully.com). |
 | `volume_limit_reached` | 429 | The account reached its daily sending volume limit. Tell the user to contact contact@mailfully.com to raise it. Test keys keep working. |
@@ -344,24 +344,35 @@ load_mailfully_key()
 ## Checking a send
 
 With the CLI (Node 24 or later on the machine running it, after the user has run
-`npx -y mailfully@1.3.0 login` and pasted the key into its hidden prompt):
+`npx -y mailfully@1.4.0 login` and pasted the key into its hidden prompt):
 
 ```bash
-npx -y mailfully@1.3.0 emails get <id> --json
-npx -y mailfully@1.3.0 emails events <id> --json
+npx -y mailfully@1.4.0 emails get <id> --json
+npx -y mailfully@1.4.0 emails events <id> --json
 ```
 
 ### Logging the CLI in
 
-The user runs `npx -y mailfully@1.3.0 login` in their own terminal window, where it reads the key
+The user runs `npx -y mailfully@1.4.0 login` in their own terminal window, where it reads the key
 through a hidden prompt. On macOS they can instead copy the key and then type this at the agent
 session's prompt, where `!` runs it in the session's shell. The CLI reads one line from the pipe,
 and `echo` adds the line ending a copied key lacks (without it the CLI reads nothing):
 
 ```bash
 # The user types this right after copying the key. Never run it yourself.
-! { pbpaste; echo; } | npx -y mailfully@1.3.0 login
+! { pbpaste; echo; } | npx -y mailfully@1.4.0 login
 ```
+
+With the user present on Node 24 or later, the browser form needs no key to be copied at all:
+
+```bash
+npx -y mailfully@1.4.0 login --web --no-wait --write-env <envfile> --json
+npx -y mailfully@1.4.0 login --web --wait --timeout 90
+```
+
+The first prints a link and a code for the user to open and approve; the second waits and exits 3
+while the request is still pending, so run it again. If a live key is already stored, both need
+`--force`. The key it creates is a test key. The agent never opens the link or approves for the user.
 
 Either way, `login` confirms with the key's prefix and last four characters, the same hint the
 dashboard shows. That is expected; the agent never repeats it or prints any part of the key itself.
@@ -379,5 +390,5 @@ the project targets. When the machine's Node is older:
 
 ## Pricing
 
-Free for 5,000 emails a month. Paid plans start at $5 a month for 10,000. See
+Free for 3,000 emails a month. Paid plans start at $5 a month for 10,000. See
 https://mailfully.com/pricing.

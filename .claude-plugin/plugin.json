@@ -1,7 +1,7 @@
 {
   "name": "add-mailfully",
   "displayName": "Add Mailfully",
-  "description": "Adds transactional email to your app with Mailfully, or moves it from Resend, SendGrid, Postmark or Nodemailer/SMTP. Works in Node.js, Python, Ruby, Go and PHP, with Django and Rails adapters, and proves a send in test mode before any DNS work. Free for 5,000 emails a month; paid plans from $5 a month for 10,000.",
+  "description": "Adds transactional email to your app with Mailfully, or moves it from Resend, SendGrid, Postmark or Nodemailer/SMTP. Works in Node.js, Python, Ruby, Go and PHP, with Django and Rails adapters, and proves a send in test mode before any DNS work. Free for 3,000 emails a month; paid plans from $5 a month for 10,000.",
   "author": {
     "name": "Mailfully",
     "url": "https://mailfully.com"
