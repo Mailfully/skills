@@ -32,7 +32,7 @@ As a Claude Code plugin:
 From [ClawHub](https://clawhub.ai):
 
 ```bash
-clawhub install @gbourne1/add-mailfully
+clawhub install @mailfully/add-mailfully
 ```
 
 Then ask your agent something like "add Mailfully to this app" or "move our email from SendGrid to Mailfully".
